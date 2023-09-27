@@ -1,8 +1,8 @@
 using Aspose.Words;
-using IronXL;
 using Microsoft.Data.Sqlite;
 using System.Data;
 using System.Xml.XPath;
+using ClosedXML.Excel;
 
 namespace ReadExcelFileApp
 {
@@ -15,7 +15,7 @@ namespace ReadExcelFileApp
         }
 
         OpenFileDialog file = new OpenFileDialog();
-        DataTable dtExcel;
+        DataTable dtExcel = new DataTable();
         String pathData = "./data";
         String pathReport = "./report";
         String dbName = "userdata";
@@ -32,7 +32,8 @@ namespace ReadExcelFileApp
                 {
                     try
                     {
-                        dtExcel = ReadExcel(file.FileName);
+                        //dtExcel = ReadExcel(file.FileName);
+                        dtExcel = ExcelToDataTable(file.FileName);
                         button1.Enabled = true;
                         button2.Enabled = true;
                         button3.Enabled = true;
@@ -51,12 +52,49 @@ namespace ReadExcelFileApp
         }
 
 
-        private DataTable ReadExcel(string fileName)
+    /*    private DataTable ReadExcel(string fileName)
         {
             WorkBook workbook = WorkBook.Load(fileName);
             WorkSheet sheet = workbook.DefaultWorkSheet;
             return sheet.ToDataTable(true);
+        }*/
+
+        public DataTable ExcelToDataTable(string filePath)
+        {
+            DataTable dt = new DataTable("Лист1");
+
+            using (XLWorkbook workBook = new XLWorkbook(filePath))
+            {
+                IXLWorksheet workSheet = workBook.Worksheet(1);
+                bool firstRow = true;
+
+                foreach (IXLRow row in workSheet.Rows())
+                {
+                    if (firstRow)
+                    {
+                        foreach (IXLCell cell in row.Cells())
+                        {
+                            dt.Columns.Add(cell.Value.ToString());
+                        }
+                        firstRow = false;
+                    }
+                    else
+                    {
+                        dt.Rows.Add();
+                        int i = 0;
+
+                        foreach (IXLCell cell in row.Cells())
+                        {
+                            dt.Rows[dt.Rows.Count - 1][i] = cell.Value.ToString();
+                            i++;
+                        }
+                    }
+                }
+            }
+
+            return dt;
         }
+
 
         private void createFolders()
         {
@@ -87,6 +125,7 @@ namespace ReadExcelFileApp
         {
             try
             {
+                button2.Enabled = false;
                 CreateDB(dbName);
 
                 // перебор всех строк таблицы
@@ -97,11 +136,12 @@ namespace ReadExcelFileApp
                     String firstName = cells[0].ToString();
                     String lastName = cells[1].ToString();
                     String gender = cells[2].ToString();
-                    Double age = (double)cells[3];
+                    Double age = Double.Parse(cells[3].ToString());
                     String status = cells[4].ToString();
                     InsertData(dbName, firstName, lastName, gender, age, status);
                 }
                 textBox1.AppendText("База данных заполнена\r\n");
+                button2.Enabled = true;
             }
             catch (Exception ex)
             {

@@ -25,10 +25,11 @@ docx-отчет должен предоставлять информацию, о
 
 ## Зависимости:
 Пакеты:
-* Aspose.Words - для формирования docx файлов
-* IronXL.Excel - для чтения xlsx файлов и дальнейшего преобразования
-* Microsoft.Data.Sqlite   - для работы с базой данных Sqlite
-* System.Data.SqlClient   -/
+* Aspose.Words(23.9.0) - для формирования docx файлов
+* ClosedXML(0.102.1)     			- для чтения xlsx файлов и дальнейшего преобразования
+* DocumentFormat.OpenXml(2.20.0) 	-/
+* Microsoft.Data.Sqlite(7.0.11)   - для работы с базой данных Sqlite
+* System.Data.SqlClient(4.8.3)   -/
 
 ## Ссылка
 [Архив с программой](release.zip)
