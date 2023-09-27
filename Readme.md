@@ -30,6 +30,9 @@ docx-отчет должен предоставлять информацию, о
 * Microsoft.Data.Sqlite   - для работы с базой данных Sqlite
 * System.Data.SqlClient   -/
 
+## Ссылка
+[Архив с программой](release.zip)
+
 # Стек
 ## С#, .NET 6.0, SQLite
 
